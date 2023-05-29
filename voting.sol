@@ -1,4 +1,4 @@
-pragma solidity 0.8.18;
+pragma solidity 0.8.20;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 
 contract Voting is Ownable {
@@ -97,15 +97,12 @@ contract Voting is Ownable {
         emit Voted (msg.sender, _proposalId);
     }
 
-    /// @notice Owner ends the voting phase
-    /// @dev Owner ends the voting phase. Current status must be VotingSessionStarted. Emits WorkflowStatusChange
     function endVotingSession() external onlyOwner withStatus(3) {
         status = WorkflowStatus.VotingSessionEnded;
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted, status);
     }
 
-    /// @notice Owner tallies the final votes
-    /// @dev Owner tallies the final votes. Current status must be VotingSessionEnded. Maximum 100 proposals (DoS). Emits WorkflowStatusChange
+    
     function tallyVotes() external onlyOwner withStatus(4) {
         uint _winningProposalId;
         for (uint256 p = 0; p < proposals.length; p++) {
